@@ -37,9 +37,9 @@ const SignInScreen = () => {
 
   return (
 
-    <ImageBackground source={Wallpap}  style={styles.backgroundImage}>
+    // <ImageBackground source={Wallpap}  style={styles.backgroundImage}>
 
-    <ScrollView>
+    <ScrollView style={styles.container}>
 
 
     <View style={styles.root}>
@@ -66,17 +66,23 @@ const SignInScreen = () => {
     </View>
     </ScrollView>
 
-    </ImageBackground>
+  //  </ImageBackground>
 
   );
 };
 
 
 const styles = StyleSheet.create({
+
+  container: {
+    flex: 1,
+    backgroundColor: '#f0a702',
+  },
+
     root:{
+      flex: 1,
         alignItems: 'center',
         padding: 15, 
-      //  backgroundColor: 'yellow',
     },
 
     logo: {

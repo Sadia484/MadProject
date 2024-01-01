@@ -39,11 +39,7 @@ onPrivacyPressed=() =>{
 
 
   return (
-
-   <ImageBackground source={Wallpaper}  style={styles.backgroundImage}>
-
-
-    <ScrollView>
+    <ScrollView style={styles.container}>
 
     <View style={styles.root}>
 
@@ -75,13 +71,16 @@ onPrivacyPressed=() =>{
     </View>
     </ScrollView>
 
-    </ImageBackground>
-
-  );
+);
 };
 
 
 const styles = StyleSheet.create({
+   container: {
+      flex: 1,
+      backgroundColor: '#f0a702',
+    },
+
     root:{
         alignItems: 'center',
         padding: 20, 
@@ -102,7 +101,7 @@ const styles = StyleSheet.create({
       },
 
       text: {
-         color: '#36454F',
+         color: 'black',
          marginVertical: 10,
       },
 

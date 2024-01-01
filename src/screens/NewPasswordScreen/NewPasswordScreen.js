@@ -29,11 +29,7 @@ const NewPasswordScreen = () => {
  }
 
   return (
-
-   
-   <ImageBackground source={Wallpap}  style={styles.backgroundImage}>
-
-    <ScrollView>
+    <ScrollView style={styles.container}>
     <View style={styles.root}>
 
     <Image source={Logo} styles={[styles.logo, {height : height* 0.2}]} resizeMode="contain" />
@@ -53,14 +49,16 @@ const NewPasswordScreen = () => {
 
     </View>
     </ScrollView>
-
-    </ImageBackground>
-
   );
 };
 
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0a702',
+  },
+  
     root:{
         alignItems: 'center',
         padding: 20, 

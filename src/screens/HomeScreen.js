@@ -1,24 +1,64 @@
-import { View, Text, Button, StyleSheet, ScrollView, StatusBar, TouchableOpacity, Image, } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import {View,Text,ScrollView,StatusBar,TouchableOpacity,Image,StyleSheet,TextInput,FlatList,SafeAreaView, } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Swiper from 'react-native-swiper';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import axios from 'axios';
+import { Card } from 'react-native-elements';
 
 //khud se
 import { useNavigation } from '@react-navigation/native';
 
 
-import Swiper from 'react-native-swiper';
+//import Swiper from 'react-native-swiper';
 
 
 const HomeScreen = ({navigation}) => {
 
+  const { colors } = useTheme();
+  const theme = useTheme();
+  const [searchLocation, setSearchLocation] = useState('');
+  const [restaurants, setRestaurants] = useState([]);
+  const apiKey = 'AIzaSyBaXNfik0Mi1P24_467aCFoak_7PWWjvQY'; 
+
+  useEffect(() => {
+    if (searchLocation) {
+      fetchNearbyRestaurants();
+    }
+  }, [searchLocation]);
+
+  const handleSearch = () => {
+    if (searchLocation) {
+      fetchNearbyRestaurants();
+    }
+  };
+
+  const fetchNearbyRestaurants = async () => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchLocation}&key=${apiKey}`
+      );
+
+      if (response.data.predictions && response.data.predictions.length > 0) {
+        const city = response.data.predictions[0].description;
+        const restaurantsResponse = await axios.get(
+          `https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurants+in+${city}&key=${apiKey}`
+        );
+
+        if (restaurantsResponse.data.results) {
+          const sortedRestaurants = restaurantsResponse.data.results.sort((a, b) => b.rating - a.rating);
+          const topRestaurants = sortedRestaurants.slice(0, 5);
+          setRestaurants(topRestaurants);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching restaurants:', error);
+    }
+  };
 
 
-    const {colors} = useTheme();
-    const theme = useTheme();
-
-    return(
-        <ScrollView style={styles.container}>
+  return (
+    <ScrollView style={styles.container}>
 
         <StatusBar barStyle={theme.dark? 'light-content' : 'dark-content'} />
 
@@ -113,51 +153,74 @@ const HomeScreen = ({navigation}) => {
             </TouchableOpacity>
 
         </View>
+        <View style={styles.searchContainer}>
+        <GooglePlacesAutocomplete
+          placeholder="Enter your location"
+          onPress={(data, details = null) => {
+            // 'details' is provided when fetchDetails = true
+            console.log(data, details);
+            setSearchLocation(data.description);
+          }}
+          query={{
+            key: apiKey,
+            language: 'en',
+          }}
+          styles={{
+            textInputContainer: {
+              width: '100%',
+            },
+            description: {
+              fontWeight: 'bold',
+            },
+          }}
+          fetchDetails
+          enablePoweredByContainer={false}
+        />
+        <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+          <Text style={styles.searchButtonText}>Search</Text>
+        </TouchableOpacity>
+      </View>
 
-      <View style={styles.cardsWrapper}>
-         <Text style={{
-            alignSelf: 'left', fontSize: 18, fontWeight: 'bold', color: '#333',
-          }}>Recently Viewed </Text>
-             <View style={styles.card}>
-                  <View style={styles.cardImgWrapper}>
-                     <Image source={require('../../assets/images/food6.jpg')} resizeMode="cover" style={styles.cardImg} />
-                  </View>
+      {/* Display top-rated restaurants */}
+      <View style={styles.verticalContainer}>
+      <FlatList
+          data={restaurants}
+          keyExtractor={(item) => item.place_id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+            onPress={async () => {
+  const detailsResponse = await axios.get(
+    `https://maps.googleapis.com/maps/api/place/details/json?place_id=${item.place_id}&key=${apiKey}`
+  );
 
-                  <View style={styles.cardInfo}>
-                    <Text style={styles.cardTitle}>Best Food Place</Text>
-                    <Text style={styles.cardDetails}>Have the amazing food experience of delicious and mouth watering dishes, made with love </Text>
-                  </View>
-
-             </View>
-
-             <View style={styles.card}>
-                  <View style={styles.cardImgWrapper}>
-                     <Image source={require('../../assets/images/food2.jpg')} resizeMode="cover" style={styles.cardImg} />
-                  </View>
-
-                  <View style={styles.cardInfo}>
-                    <Text style={styles.cardTitle}>Second Best Food Place</Text>
-                    <Text style={styles.cardDetails}>Have the amazing food experience of delicious and mouth watering dishes, made with love </Text>
-                  </View>
-
-             </View>
-
-             <View style={styles.card}>
-                  <View style={styles.cardImgWrapper}>
-                     <Image source={require('../../assets/images/food3.jpg')} resizeMode="cover" style={styles.cardImg} />
-                  </View>
-
-                  <View style={styles.cardInfo}>
-                    <Text style={styles.cardTitle}>Third Amazing Food Place</Text>
-                    <Text style={styles.cardDetails}>Have the amazing food experience of delicious and mouth watering dishes, made with love </Text>
-                  </View>
-
-             </View>
-
-        </View>
+  navigation.navigate('CardDetails', {
+    restaurant: item,
+    details: detailsResponse.data.result,
+  });
+}}            >
+              <Card containerStyle={styles.restaurantCard}>
+                <Image
+                  source={{
+                    uri: item.photos && item.photos.length > 0
+                      ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${item.photos[0].photo_reference}&key=${apiKey}`
+                      : 'https://via.placeholder.com/150',
+                  }}
+                  style={styles.restaurantImage}
+                />
+                <Text style={styles.restaurantName}>{item.name}</Text>
+                <Text style={styles.restaurantRating}>
+                  Rating: {item.rating} ({item.user_ratings_total || 0} reviews)
+                </Text>
+                <Text style={styles.restaurantDescription}>{item.formatted_address}</Text>
+              </Card>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     </ScrollView>
-    );
+  );
 };
+
 
 export default HomeScreen;
 
@@ -235,53 +298,79 @@ const styles = StyleSheet.create({
           },
 
           //cards
-          cardsWrapper: {
-            marginTop: 20,
-            width: '90%',
-            alignSelf: 'center',
-          },
-          card: {
-            height: 100,
-            marginVertical: 10,
+          searchContainer: {
             flexDirection: 'row',
-            shadowColor: '#999',
-            shadowOffset: {width: 0, height: 1},
-            shadowOpacity: 0.8,
-            shadowRadius: 2,
-            elevation: 5,
+            margin: 10,
           },
-          cardImgWrapper: {
+          textInput: {
             flex: 1,
-          },
-          cardImg: {
-            height: '100%',
-            width: '100%',
-            alignSelf: 'center',
-            borderRadius: 8,
-            borderBottomRightRadius: 0,
-            borderTopRightRadius: 0,
-          },
-          cardInfo: {
-            flex: 2,
+            backgroundColor: 'white',
+            height: 40,
+            marginRight: 10,
             padding: 10,
-            borderColor: '#ccc',
-            borderWidth: 1,
-            borderLeftWidth: 0,
-            borderBottomRightRadius: 8,
-            borderTopRightRadius: 8,
-            backgroundColor: '#fff',
+            borderRadius: 5,
+          },
+          searchButton: {
+            backgroundColor: 'blue',
+            padding: 10,
+            borderRadius: 5,
+          },
+          searchButtonText: {
+            color: 'white',
+          },
+        
+          cardsWrapper: {
+            margin: 10,
+          },
+        
+          // Restaurant card styles
+          verticalContainer: {
+            margin: 10,
+          },
+        
+          horizontalContainer: {
+            flexDirection: 'row',
+            marginBottom: 10,
+          },
+        
+          restaurantCard: {
+            width: '95%', 
+            height: 300,
+            marginVertical: 10, 
+            marginBottom: 10,
+            alignSelf: 'center', 
+            borderRadius: 10,
+            paddingHorizontal: 10, 
           },
 
-          cardTitle: {
-            fontWeight: 'bold',
-            fontSize: 18,
+          restaurantImage: {
+            width: '100%',
+            height: 150,
+            borderRadius: 10, 
           },
           
-          cardDetails: {
-            fontSize: 12,
-            color: '#444',
+          restaurantName: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginTop: 10, // Add margin to separate name from the image
+          },
+          
+          restaurantRating: {
+            fontWeight: 'bold',
+            fontSize: 17,
+            marginTop: 5, // Add margin to separate rating from the name
+          },
+          
+          restaurantDescription: {
+            fontSize: 15,
+            marginVertical: 5,
           },
 
-})
-
-
+          sectionHeader: {
+            fontSize: 20,
+            fontWeight: 'bold',
+            marginTop: 16,
+            marginBottom: 8,
+          },
+        });
+        

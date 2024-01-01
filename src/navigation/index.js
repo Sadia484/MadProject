@@ -13,6 +13,9 @@ import NewPasswordScreen from '../screens/NewPasswordScreen/NewPasswordScreen.js
 import Services from '../screens/Services/Services.js';
 import Eww from '../screens/Eww';
 import EditProfile from '../screens/EditProfile'
+import RestaurantDetails from '../screens/RestaurantDetails'
+
+import CardDetails from '../screens/CardDetails'
 
 import Tabs from './tabs.js';
 
@@ -36,6 +39,10 @@ const Navigation = () => {
 
        <Stack.Screen name ="Eww" component={Eww} />
        <Stack.Screen name ="EditProfile" component={EditProfile} />
+
+       <Stack.Screen name ="RestaurantDetails" component={RestaurantDetails} />
+
+       <Stack.Screen name ="CardDetails" component={CardDetails} />
     
 
 

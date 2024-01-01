@@ -45,7 +45,7 @@ container_TERTIARY : {
     },
 
     text_TERTIARY :{
-        color: 'gray',
+        color: 'black',
     },
 
     text_SECONDARY : {

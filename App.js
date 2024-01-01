@@ -3,9 +3,6 @@ import {SafeAreaView, StyleSheet, Text} from 'react-native';
 
 import Navigation from './src/navigation';
 
-
-
-
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 

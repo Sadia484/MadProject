@@ -1,52 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, SafeAreaView, Image, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import Wallpap from '../../assets/images/wall.jpg';
 
 const ProfileScreen = ({ navigation }) => {
+  const [userData, setUserData] = useState({
+    name: 'Sadia Rahman',
+    city: 'Lahore, Pakistan',
+    phone: '+9213434545454',
+    email: 'sadia@gmail.com',
+  });
 
   return (
     <ImageBackground source={Wallpap} style={styles.backgroundImage}>
       <SafeAreaView style={styles.container}>
         <View style={styles.box}>
           <View style={styles.userInfoSection}>
-            <View style={{ flexDirection: 'column', marginTop: 20, marginBottom: 20 }}>
+            <View style={styles.profileContainer}>
               <Image source={require('../../assets/images/user.jpg')} style={styles.profileImage} />
-              <View style={{ marginLeft: 0 }}>
-                <Text style={[styles.title, { marginTop: 15, marginBottom: 10 }]}>Sadia Rahman</Text>
-              </View>
+              <Text style={styles.title}>{userData.name}</Text>
             </View>
           </View>
 
-          <View style={styles.row}>
-            <Text></Text>
-            <Text></Text>
-            <Text style={{ fontSize: 19 }}>Hii</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoText}>Greetings!</Text>
           </View>
 
-          <View style={styles.row}>
-            <Text style={{ fontSize: 19 }}>Lahore, Pakistan</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoText}>{userData.city}</Text>
           </View>
 
-          <View style={styles.row}>
-            <Text style={{ fontSize: 19 }}>+9213434545454</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoText}>{userData.phone}</Text>
           </View>
 
-          <View style={styles.row}>
-            <Text style={{ fontSize: 19 }}>sadia@gmail.com</Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoText}>{userData.email}</Text>
           </View>
 
           <View style={styles.space}></View>
 
-          <TouchableOpacity style={styles.categoryBtn} onPress={() => navigation.navigate('EditProfile')}>
-            <View style={styles.categoryIcon}>
-              <Image source={require('../../assets/images/edit.jpg')} style={styles.forkk} />
+          <TouchableOpacity
+            style={styles.editProfileBtn}
+            onPress={() => navigation.navigate('EditProfile', { userData, setUserData })}
+          >
+            <View style={styles.editIcon}>
+              <Image source={require('../../assets/images/edit.jpg')} style={styles.editIconImage} />
             </View>
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
-            <Text style={styles.categoryBtnTxt}>Edit Profile</Text>
+            <Text style={styles.editProfileBtnTxt}>Edit Profile</Text>
           </TouchableOpacity>
 
           <View style={styles.space}></View>
@@ -66,22 +68,36 @@ const styles = StyleSheet.create({
 
   userInfoSection: {
     paddingHorizontal: 2,
- //   paddingTop: 10,
+  },
+
+  profileContainer: {
+    flexDirection: 'column',
+    marginTop: 40,
+    marginBottom: 20,
+    alignItems: 'center',
   },
 
   profileImage: {
-    width: 66,
-    height: 66,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
 
   title: {
     fontSize: 25,
     fontWeight: 'bold',
+    marginTop: 15,
   },
 
-  row: {
+  infoRow: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: 15,
+    justifyContent: 'center',
+  },
+
+  infoText: {
+    fontSize: 19,
+    
   },
 
   space: {
@@ -96,46 +112,47 @@ const styles = StyleSheet.create({
   },
 
   box: {
+    alignSelf: 'center', // Center the box horizontally
+    justifyContent: 'center',
     borderWidth: 3,
     borderColor: 'black',
     padding: 20,
     borderRadius: 10,
-    width: '76%', // Adjust the width of the box as needed
+    width: '80%',
     height: '70%',
     backgroundColor: 'white',
   },
 
-  categoryBtn: {
+  editProfileBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '50%',
+    width: '80%',
     marginHorizontal: 0,
-    marginTop: 20,
-  },
-
-  categoryIcon: {
-    borderWidth: 0,
-    alignItems: 'center',
+    marginTop: 0,
+    backgroundColor: 'white',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 8,
     justifyContent: 'center',
-    alignSelf: 'left',
-    width: 30,
-    height: 30,
-    backgroundColor: 'black',
-    borderRadius: 50,
+  },
+  
+  editIcon: {
+    marginRight: 10,
   },
 
-  forkk: {
-    width: 40,
-    height: 40 ,
+  editIconImage: {
+    width: 50,
+    height: 50,
   },
 
-  categoryBtnTxt: {
-    alignSelf: 'left',
-    marginLeft: 10,
+  editProfileBtnTxt: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
+    marginLeft: 10, // Adjust the left margin as needed
+    marginRight: 10, // Adjust the right margin as needed
   },
+
 });
 
 export default ProfileScreen;

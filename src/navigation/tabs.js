@@ -7,6 +7,7 @@ import SettingScreen from '../screens/SettingScreen';
 import React from 'react';
 
 
+
 const Tab = createBottomTabNavigator();
 
 const Tabs = () => {
@@ -46,7 +47,7 @@ const Tabs = () => {
             }}  
             />
 
-<Tab.Screen name="Profile" component={ProfileScreen} options={{
+<Tab.Screen name="Setting" component={ProfileScreen} options={{
                 tabBarIcon : ({focused}) => (
                     <View style={{alignItems: 'center', justifyContent: 'center', top: 4}}>
                        <Image source={require('../../assets/images/profile.png')} 
