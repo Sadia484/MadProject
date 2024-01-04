@@ -64,7 +64,7 @@ const SettingScreen = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <GooglePlacesAutocomplete
-          placeholder="Search for a location"
+          placeholder="Search a Restaurant"
           onPress={handlePlaceSelection}
           query={{
             key: apiKey,
@@ -144,10 +144,12 @@ const styles = StyleSheet.create({
 
   searchContainer: {
     position: 'absolute',
-    top: 10,
+    top: 20,
     left: 0,
     right: 0,
     zIndex: 1,
+    paddingTop: 10,
+  
   },
 
   textInputContainer: {

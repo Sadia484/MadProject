@@ -26,6 +26,7 @@ const Tabs = () => {
             />
                     </View>
                 ),
+                headerShown: false,
 
             }}  
             />
@@ -44,6 +45,7 @@ const Tabs = () => {
             />
                             </View>
                 ),
+                headerShown: false,
             }}  
             />
 
@@ -62,7 +64,7 @@ const Tabs = () => {
             />
                     </View>
                 ),
-
+                headerShown: false,
             }}  
             />
 

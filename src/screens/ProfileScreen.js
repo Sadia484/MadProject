@@ -9,7 +9,7 @@ const ProfileScreen = ({ navigation }) => {
     name: 'Sadia Rahman',
     city: 'Lahore, Pakistan',
     phone: '+9213434545454',
-    email: 'sadia@gmail.com',
+    email: 'bcsf20a540@pucit.edu.pk',
   });
 
   return (
@@ -51,6 +51,18 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={styles.editProfileBtnTxt}>Edit Profile</Text>
           </TouchableOpacity>
 
+
+
+          <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ConfirmEmail');
+          }}
+          style={[styles.signinbutton, styles.buttonOutlineText]}
+        >
+          <Text style={styles.buttonText2}>Logout</Text>
+        </TouchableOpacity>
+
+
           <View style={styles.space}></View>
 
         </View>
@@ -66,14 +78,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
+  signinbutton:{
+    backgroundColor: 'transparent',
+    width: '100%',
+    padding: 15,
+    borderRadius: 6,
+    alignItems: 'center',
+    borderColor: 'black',  
+    borderWidth: 2, 
+  },
+
+  buttonOutlineText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  buttonText2: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+
   userInfoSection: {
     paddingHorizontal: 2,
   },
 
   profileContainer: {
     flexDirection: 'column',
-    marginTop: 40,
-    marginBottom: 20,
+   // marginTop: 10,
+   // marginBottom: -50,
     alignItems: 'center',
   },
 
@@ -91,7 +124,7 @@ const styles = StyleSheet.create({
 
   infoRow: {
     flexDirection: 'row',
-    marginBottom: 15,
+    marginBottom: 3,
     justifyContent: 'center',
   },
 
@@ -101,7 +134,7 @@ const styles = StyleSheet.create({
   },
 
   space: {
-    height: 20,
+    height: 4,
   },
 
   backgroundImage: {

@@ -1,75 +1,85 @@
-import React , {useState} from 'react';
-import { View, Text, Image, StyleSheet , useWindowDimensions, ScrollView, ImageBackground,} from 'react-native';
+import React , {useEffect, useState} from 'react';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ImageBackground,  TouchableOpacity,} from 'react-native';
 import Logo from '../../../assets/images/applogo.png';
-import CustomInput from '../../components/CustomInput/CustomInput';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import SocialSignInButtons from '../../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
-
-
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../../firebase';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Wallpap from '../../../assets/images/waal.jpg';
+import { TextInput } from 'react-native';
+
 
 const SignInScreen = () => {
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
- const {height} = useWindowDimensions();
+const [email, setEmail]= useState('')
+const [password, setPassword]= useState('')
 
  const navigation = useNavigation();
 
-
- const onSignInPressed = () =>{
-   // navigation.navigate('HomeScreen');
-   navigation.navigate("Tabs")
- }
-
- const onForgotPasswordPressed = () =>{
-    navigation.navigate("ForgotPassword");
- }
-
- 
- const OnSignUpPress = () =>{
-    navigation.navigate("SignUp");
- }
+useEffect(() => {
+  const unsubscribe= auth.onAuthStateChanged(user => {
+    if(user) {
+      navigation.replace("Tabs")
+    }
+  })
+  return unsubscribe
+} ,[])
 
 
+const handleLogin = async () => {
+  try {
+    const authInstance = getAuth();
+    const userCredentials = await signInWithEmailAndPassword(authInstance, email, password);
+    const user = userCredentials.user;
+    console.log('Logged in with:', user.email);
+  } catch (error) {
+    alert('Invald credentials bro!');
+  }
+};
 
   return (
 
-    // <ImageBackground source={Wallpap}  style={styles.backgroundImage}>
+  
+    <View style={styles.container}>
+    <Image source={Logo} style={[styles.logo]} resizeMode="contain" />
 
-    <ScrollView style={styles.container}>
+    <View style={styles.inputContainer}>
+      <TextInput
+        placeholder="Email"
+        value={email}
+        onChangeText={(text) => setEmail(text)}
+        style={[styles.input, { marginBottom: 10 }]}
+      />
 
-
-    <View style={styles.root}>
-      
-      <Image source={Logo} style={[styles.logo, {height : height* 0.28}]} resizeMode="contain" />
-
-    <Text></Text>
-
-      <CustomInput placeholder="UserName"  value={username} setValue={setUsername} />
-      <CustomInput placeholder="Password" value={password} setValue={setPassword} secureTextEntry={true}/>
-      
-    <CustomButton text="Sign in" onPress={onSignInPressed} />
-    <CustomButton text="Forgot Password?" onPress={onForgotPasswordPressed} 
-    type="TERTIARY"/>
-
-<SocialSignInButtons />
-
-<CustomButton 
-  text="Don't have an account? Create one" 
-  onPress={OnSignUpPress} 
- type="TERTIARY"
- />
-
+      <TextInput
+        placeholder="Password"
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+        style={[styles.input]}
+        secureTextEntry
+      />
     </View>
-    </ScrollView>
 
-  //  </ImageBackground>
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity onPress={handleLogin} style={styles.button}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
 
-  );
+      
+      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+        <Text style={styles.text}>Forgot Password?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+        <Text style={styles.text}>Don't have an account? Create one</Text>
+      </TouchableOpacity>
+
+        
+    </View>
+  </View>
+);
 };
+
 
 
 const styles = StyleSheet.create({
@@ -77,8 +87,70 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f0a702',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
+  logo: {
+    width: '67%',  
+    maxWidth: 350,
+    maxHeight: 260,
+    height: '65%',
+    marginTop: -30,  
+  },
+
+  inputContainer:{
+    width: '87%',
+  },
+
+  input:{
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 5,
+  },
+
+  buttonContainer:{
+    width: '87%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+
+  button:{
+    backgroundColor: 'black',
+    width: '100%',
+    padding: 15,
+    borderRadius: 6,
+    alignItems: 'center',
+  },
+
+  buttonOutline:{
+    backgroundColor: 'white',
+    marginTop: 5,
+    borderColor: 'green',
+    borderWidth: 2,
+  },
+  buttonText:{
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+
+  buttonOutlineText:{
+    color: 'pink',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+ 
+  text:{
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 15,
+  }
+
+  /*
     root:{
       flex: 1,
         alignItems: 'center',
@@ -107,6 +179,7 @@ const styles = StyleSheet.create({
       },
 
       */
+     
 
 });
 
