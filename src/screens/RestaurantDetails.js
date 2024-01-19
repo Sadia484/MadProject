@@ -6,6 +6,27 @@ const RestaurantDetailsScreen = ({ route }) => {
 
   const { restaurant } = route.params;
 
+  const [menu, setMenu] = useState([]);
+
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try {
+        const response = await axios.get(
+          `https://maps.googleapis.com/maps/api/place/details/json?place_id=${restaurant.place_id}&fields=menu&key=${apiKey}`
+        );
+
+        if (response.data.result && response.data.result.menus) {
+          setMenu(response.data.result.menus);
+        }
+      } catch (error) {
+        console.error('Error fetching menu:', error);
+      }
+    };
+
+    fetchMenu();
+  }, [restaurant.place_id]);
+
+
   return (
     <ScrollView style={styles.container}>
       <Image
@@ -50,6 +71,8 @@ const RestaurantDetailsScreen = ({ route }) => {
           )}
         />
       </View>
+
+      
     </ScrollView>
   );
 };

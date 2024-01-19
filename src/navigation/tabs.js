@@ -6,6 +6,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 import SettingScreen from '../screens/SettingScreen';
 import React from 'react';
 
+import Try from '../screens/Try';
+
 
 
 const Tab = createBottomTabNavigator();
@@ -49,6 +51,26 @@ const Tabs = () => {
             }}  
             />
 
+<Tab.Screen name="Hot" component={Try} options={{
+                tabBarIcon : ({focused}) => (
+                    <View style={{alignItems: 'center', justifyContent: 'center', top: 4}}>
+                       <Image source={require('../../assets/images/try.jpg')} 
+                        resizeMode="contain"
+                        
+                        style={{
+                            width: 48,
+                            height: 43,
+                          //  tintColor: focused? 'black' : 'gray'
+
+                        }} 
+            />
+                    </View>
+                ),
+                headerShown: false,
+            }}  
+            />
+
+
 <Tab.Screen name="Setting" component={ProfileScreen} options={{
                 tabBarIcon : ({focused}) => (
                     <View style={{alignItems: 'center', justifyContent: 'center', top: 4}}>
@@ -67,6 +89,7 @@ const Tabs = () => {
                 headerShown: false,
             }}  
             />
+
 
         </Tab.Navigator>
     );
