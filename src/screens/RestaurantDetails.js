@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, FlatList } from 'react-native';
+import axios from 'axios';
 
 const RestaurantDetailsScreen = ({ route }) => {
   const apiKey = 'AIzaSyBaXNfik0Mi1P24_467aCFoak_7PWWjvQY'; 

@@ -33,6 +33,7 @@ const handleLogin = async () => {
     const user = userCredentials.user;
     console.log('Logged in with:', user.email);
   } catch (error) {
+    console.log(error);
     alert('Invald credentials bro!');
   }
 };

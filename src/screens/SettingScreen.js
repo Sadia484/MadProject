@@ -144,7 +144,8 @@ const styles = StyleSheet.create({
 
   searchContainer: {
     position: 'absolute',
-    top: 20,
+    top: 40,
+    marginTop: 20,
     left: 0,
     right: 0,
     zIndex: 1,
